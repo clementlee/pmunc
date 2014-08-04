@@ -1,6 +1,38 @@
+<?php
+	include_once('config.php');
+	$errors = array();
+	$success = array();
+
+	if(isset($_POST['loginSubmit']) && $_POST['loginSubmit'] == 'true') {
+		$loginEmail = trim($_POST['email']);
+		$loginPassword = trim($_POST['password']);
+
+	if (!eregi("^[^@]{1,64}@[^@]{1,255}$", $loginEmail))  
+	        $errors['loginEmail'] = 'Your email address is invalid.';  
+	      
+	if(strlen($loginPassword) < 6 || strlen($loginPassword) > 12)  
+	        $errors['loginPassword'] = 'Your password must be between 6-12 characters.';  
+	      
+	if(!$errors){  
+	    $query  = 'SELECT * FROM users WHERE email = "' . mysql_real_escape_string($loginEmail) . '" AND password = MD5("' . $loginPassword . '") LIMIT 1';  
+	    $result = mysql_query($query);  
+	    if(mysql_num_rows($result) == 1){  
+	        $user = mysql_fetch_assoc($result);  
+	        $query = 'UPDATE users SET session_id = "' . session_id() . '" WHERE id = ' . $user['id'] . ' LIMIT 1';  
+	        mysql_query($query);  
+	        header('Location: dashboard.php');  
+	        exit;  
+	    }
+	    else{  
+	        $errors['login'] = 'No user was found with the details provided.';  
+	    }  
+	}
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<meta charset="utf-8">
 		<!-- PACE LOADING BAR DEPENDENCIES -->
 		<script src="js/pace.min.js"></script>
 		<link href="css/pace-minimal.css" rel="stylesheet">
@@ -20,7 +52,7 @@
 
 		<!-- CUSTOM CSS -->
 		<link href="css/index.css" rel="stylesheet">
-		<link href="css/schedule.css" rel="stylesheet">
+		<link href="css/signin.css" rel="stylesheet">
 
 		<title>PMUNC</title>
 		<meta charset="utf-8">
@@ -58,7 +90,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="index.html">Home</a></li>
 						<li><a href="register.html">Register</a></li>
-						<li class="dropdown active">
+						<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Information <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="logistics.html">Logistics</a></li>
@@ -67,7 +99,7 @@
 							<li><a href="faq.html">FAQ</a></li>
 						</ul>
 						</li>
-						<li><a href="committees.php">Committees</a></li>
+						<li><a href="committees.html">Committees</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="https://www.facebook.com/PrincetonInternationalRelationsCouncil"><i class="fa fa-facebook"></i></a></li>
@@ -77,98 +109,35 @@
 				</div>
 			</div>
 		</div>
-		<!-- JUMBOTRON -->
-		<div class="jumbotron schedule">
+		<div class="container" id="signin-container">
 			<div class="container">
-				<h1 class="banner-inverted"><font color="white">Schedule</font></h1>
+				<h1 class="text-center">Login</h1>
+				<div class="horbar">
+				</div><br>
+					<form name="loginForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-signin" role="form">
+						<?php
+						if($errors['login'])
+							print '<div class="invalid">' . $errors['login'] . '</div>';
+						?>
+
+						<input type="email" class="form-control" placeholder="Email address" value="<?php echo htmlspecialchars($loginEmail); ?>" name="email" required autofocus>
+						<?php
+						if($errors['loginEmail'])
+							print '<div class="invalid">' . $errors['loginEmail'] . '</div>';
+						?>
+
+						<input type="password" class="form-control" placeholder="Password" name="password" value = "" required>
+						<?php
+						if($errors['loginPassword'])
+							print '<div class="invalid">' . $errors['loginPassword'] . '</div>';
+						?>
+
+						<input type="hidden" name="loginSubmit" id="loginSubmit" value="true">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"></button>
+					</form>
+					<center><a href="#"><button type="button" class="btn btn-link">Forgot your password?</button></a></center>
 			</div>
 		</div>
-		<div class="container" id="sched-container">
-			<div class="container">
-		<h1 class="text-center">Thursday, November 20, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				5 - 6 PM:<br>
-				6 - 8 PM:<br>
-				8 - 11 PM:<br>
-				11:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Opening Ceremonies<br>
-				Dinner<br>
-				Committee Session I<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Friday, November 21, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:00 AM – 1:30 PM:<br>
-				1:30 – 4 PM:<br>
-				3:30 – 4:30 PM:<br>
-				4 – 6:30 PM:<br>
-				6 – 8 PM:<br>
-				7:30 PM – 11:30 PM:<br>
-				12 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Optional Campus Visits<br>
-				Committee Session II<br>
-				Afternoon Break<br>
-				Committee Session III<br>
-				Dinner<br>
-				Committee Session IV<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Saturday, November 22, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				8:30 AM – 12 PM:<br>
-				11:30 AM – 1:30 PM:<br>
-				1 – 4:30 PM:<br>
-				4 – 5 PM:<br>
-				4:30 – 7:30 PM:<br>
-				7 – 9 PM:<br>
-				9:30 PM – 12 AM:<br>
-				10 PM – 12 AM:<br>
-				1 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session V<br>
-				Lunch<br>
-				Committee Session VI<br>
-				Afternoon Break<br>
-				Committee Session VII<br>
-				Dinner<br>
-				Delegate Dance<br>
-				Movie Showing<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Sunday, November 23, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:30 AM - 12 PM:<br>
-				12 - 1:30 PM:<br>
-				1:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session VIII<br>
-				Closing Ceremonies<br>
-				Lunch
-			</div>
-		</div>
-	</div>
-	</div>
 		<div class="container container-footer">
 			<div class="container">
 				<footer>

@@ -1,3 +1,4 @@
+<?php include_once('config1.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -20,7 +21,7 @@
 
 		<!-- CUSTOM CSS -->
 		<link href="css/index.css" rel="stylesheet">
-		<link href="css/schedule.css" rel="stylesheet">
+		<link href="css/Template.css" rel="stylesheet">
 
 		<title>PMUNC</title>
 		<meta charset="utf-8">
@@ -58,7 +59,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="index.html">Home</a></li>
 						<li><a href="register.html">Register</a></li>
-						<li class="dropdown active">
+						<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Information <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="logistics.html">Logistics</a></li>
@@ -77,98 +78,44 @@
 				</div>
 			</div>
 		</div>
-		<!-- JUMBOTRON -->
-		<div class="jumbotron schedule">
+		<div class="container" id="template-container">
 			<div class="container">
-				<h1 class="banner-inverted"><font color="white">Schedule</font></h1>
+				<h1 class="text-center">Committee Management</h1>
+				<div class="horbar">
+				</div><br>
+				<?php
+				$committees = array(
+					"Special Political and Decolonization Committee",
+					"Disarmament and International Security",
+					"Security Council",
+					"World Health Organization",
+					"High Commissioner for Refugees",
+					"Office on Drugs and Crime",
+					"Human Rights Council",
+					"World Bank",
+					"Paris Peace Conference",
+					"Arab League",
+					"Organization of American States",
+					"International Criminal Court",
+					"Association of Southeast Asian Nations",
+					"Mao's Yan'An Red Base",
+					"Cabinet of the Republic of Liberia",
+					"Ukraine in Turmoil",
+					"2050 National Security Council",
+					"Israel-Hamas-Fatah Joint Crisis Committee"
+				);
+				echo "<table class=\"table\">
+				<thead><tr><th>Committees</th></tr></thead>
+				<tbody>";
+				for ($i = 0; $i < count($committees); $i++) {
+					$link = "committeeEdit1.php?committee=$i";
+					echo "<tr><td><a href=$link>$committees[$i]</a></td></tr>\n";
+				}
+				echo "</tbody></table>";
+				?>
+				<center><a href="dashboard.php"><button type="button" class="btn btn-link">Back to Dashboard</button></a></center>
 			</div>
 		</div>
-		<div class="container" id="sched-container">
-			<div class="container">
-		<h1 class="text-center">Thursday, November 20, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				5 - 6 PM:<br>
-				6 - 8 PM:<br>
-				8 - 11 PM:<br>
-				11:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Opening Ceremonies<br>
-				Dinner<br>
-				Committee Session I<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Friday, November 21, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:00 AM – 1:30 PM:<br>
-				1:30 – 4 PM:<br>
-				3:30 – 4:30 PM:<br>
-				4 – 6:30 PM:<br>
-				6 – 8 PM:<br>
-				7:30 PM – 11:30 PM:<br>
-				12 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Optional Campus Visits<br>
-				Committee Session II<br>
-				Afternoon Break<br>
-				Committee Session III<br>
-				Dinner<br>
-				Committee Session IV<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Saturday, November 22, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				8:30 AM – 12 PM:<br>
-				11:30 AM – 1:30 PM:<br>
-				1 – 4:30 PM:<br>
-				4 – 5 PM:<br>
-				4:30 – 7:30 PM:<br>
-				7 – 9 PM:<br>
-				9:30 PM – 12 AM:<br>
-				10 PM – 12 AM:<br>
-				1 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session V<br>
-				Lunch<br>
-				Committee Session VI<br>
-				Afternoon Break<br>
-				Committee Session VII<br>
-				Dinner<br>
-				Delegate Dance<br>
-				Movie Showing<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Sunday, November 23, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:30 AM - 12 PM:<br>
-				12 - 1:30 PM:<br>
-				1:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session VIII<br>
-				Closing Ceremonies<br>
-				Lunch
-			</div>
-		</div>
-	</div>
-	</div>
 		<div class="container container-footer">
 			<div class="container">
 				<footer>

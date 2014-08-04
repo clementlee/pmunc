@@ -1,13 +1,9 @@
-.schedule {
-	background-image: url("../img/schedule.jpg");
-	background-size: cover;
-}
-
-#sched-container {
+#template-container {
 	background: white;
-	margin-top: -50px;
 	padding-bottom: 50px;
 	padding-top: 50px;
+	padding-left: 50px;
+	padding-right: 100px;
 }
 
 body {
@@ -15,8 +11,7 @@ body {
 }
 
 .horbar {
-	margin-left: 50px;
-	margin-right: 100px;
+	width: 100%;
 }
 
 .row {
@@ -25,4 +20,8 @@ body {
 
 h1.text-center {
 	font-size: 30px;
+}
+
+.container .container {
+	width: 90%;
 }

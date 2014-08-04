@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +71,7 @@
 							<li><a href="faq.html">FAQ</a></li>
 						</ul>
 					</li>
-					<li class = "active"><a href="committees.html">Committees</a></li>
+					<li class = "active"><a href="committees.php">Committees</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="https://www.facebook.com/PrincetonInternationalRelationsCouncil"><i class="fa fa-facebook"></i></a></li>
@@ -114,7 +113,20 @@
 									<h1 class="text-center">Special Political and Decolonization Committee</h1>
 									<div class="horbar">
 									</div><br>
-									<p>More information coming soon!</p>
+									<?php
+									$mysqli = new mysqli("localhost", "pmunc", "pmunctechteam", "pmunc");
+									if (mysqli_connect_errno()) {
+										printf("Connect failed: %s\n", mysqli_connect_error());
+										exit();
+									}
+									$query = "SELECT * FROM COMMITTEE_INFO WHERE Leader='Nathan Eckstein';";
+									$result = $mysqli->query($query);
+									if (!$result) echo "Could not perform query. " . mysql_error();
+									$row = $result->fetch_row();
+									echo "<b><h4>Background Guide:</h4></b> <a href=\"docs/" . $row[4] . "\"> Download Here</a><br><br><b><h4>Committee Application:</h4></b> <a href=\"docs/" . $row[5] . "\"> Download Here</a>";
+									$result->close();
+									$mysqli->close();
+									?>
 								</div>
 							</div>
 						</div>

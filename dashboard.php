@@ -1,3 +1,6 @@
+<?php
+include_once('config.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -20,7 +23,8 @@
 
 		<!-- CUSTOM CSS -->
 		<link href="css/index.css" rel="stylesheet">
-		<link href="css/schedule.css" rel="stylesheet">
+		<link href="css/Template.css" rel="stylesheet">
+		<link href="css/dashboard.css" rel="stylesheet">
 
 		<title>PMUNC</title>
 		<meta charset="utf-8">
@@ -58,7 +62,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="index.html">Home</a></li>
 						<li><a href="register.html">Register</a></li>
-						<li class="dropdown active">
+						<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Information <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="logistics.html">Logistics</a></li>
@@ -77,98 +81,56 @@
 				</div>
 			</div>
 		</div>
-		<!-- JUMBOTRON -->
-		<div class="jumbotron schedule">
+		<div class="container" id="template-container">
 			<div class="container">
-				<h1 class="banner-inverted"><font color="white">Schedule</font></h1>
+				<h1 class="text-center">Welcome, <?php echo $_SESSION['user']['first_name']; ?>!</h1>
+				<div class="horbar">
+				</div><br>
+					<?php
+					if ($_SESSION['user']['user_type'] == 1) {
+						echo "<h2><i class=\"fa fa-user\"></i>  <a href=\"accountManagement.php\">User Management</a></h2>
+						<p><i>Manage all user accounts - change usernames/passwords, or add/delete accounts.</i></p>
+						<h2><span class=\"glyphicon glyphicon-home\"></span>  <a>School Delegation Management</a></h2>
+						<p><i>Edit school delegation information and download delegates' committee applications.</i></p>
+						<h2><i class=\"fa fa-users\"></i>  <a href=\"committeeManagement1.php\">Committee Management</a></h2>
+						<p><i>Edit committee information, upload committee-related documents, add positions, and download submitted committee applications.</i></p>
+						<h2><i class=\"fa fa-edit\"></i>  <a>By-Application Committee Assignments</a></h2>
+						<p><i>Assign delegates to committees requiring applications.</i></p>
+						<h2><i class=\"fa fa-clipboard\"></i>  <a>Non-Application Committee Assignments</a></h2>
+						<p><i>Assign delegates from each country to non-application committees.</i></p>";
+					}
+					else if ($_SESSION['user']['user_type'] == 2) {
+						echo "<h2><i class=\"fa fa-user\"></i>  <a>Account Management</a></h2>
+						<p><i>Edit your account and school delegation information.</i></p>
+						<h2><span class=\"glyphicon glyphicon-cloud-upload\"></span>  <a>Committee Application Submission</a></h2>
+						<p><i>Submit committee applications for participants from your delegation.</i></p>
+						<h2><span class=\"glyphicon glyphicon-globe\"></span>  <a>Country Preference Submission</a></h2>
+						<p><i>Submit your preferences for country assignments.</i></p>
+						<h2><i class=\"fa fa-envelope\"></i>  <a>Contact the PMUNC Secretariat</a></h2>
+						<p><i>Send a private message to the PMUNC Secretariat.</i></p>
+						<h2><i class=\"fa fa-users\"></i>  <a>Committee Assignments</a></h2>
+						<p><i>View which committees your delegates have been assigned to.</i></p>";
+					}
+					else if ($_SESSION['user']['user_type'] == 3) {
+						echo "<h2><i class=\"fa fa-user\"></i>  <a href=\"accountInfo3.php\">Account Management</a></h2>
+						<p><i>Edit your account information.</i></p>
+						<h2><i class=\"fa fa-users\"></i>  <a>Committee Management</a></h2>
+						<p><i>Edit your committee information and upload relevant documents.</i></p>";
+					}
+					?>
+					<h2><span class="glyphicon glyphicon-log-out"></span>  <a href="logout.php">Log Out</a></h2><br>
 			</div>
 		</div>
-		<div class="container" id="sched-container">
-			<div class="container">
-		<h1 class="text-center">Thursday, November 20, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				5 - 6 PM:<br>
-				6 - 8 PM:<br>
-				8 - 11 PM:<br>
-				11:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Opening Ceremonies<br>
-				Dinner<br>
-				Committee Session I<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Friday, November 21, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:00 AM – 1:30 PM:<br>
-				1:30 – 4 PM:<br>
-				3:30 – 4:30 PM:<br>
-				4 – 6:30 PM:<br>
-				6 – 8 PM:<br>
-				7:30 PM – 11:30 PM:<br>
-				12 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Optional Campus Visits<br>
-				Committee Session II<br>
-				Afternoon Break<br>
-				Committee Session III<br>
-				Dinner<br>
-				Committee Session IV<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Saturday, November 22, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				8:30 AM – 12 PM:<br>
-				11:30 AM – 1:30 PM:<br>
-				1 – 4:30 PM:<br>
-				4 – 5 PM:<br>
-				4:30 – 7:30 PM:<br>
-				7 – 9 PM:<br>
-				9:30 PM – 12 AM:<br>
-				10 PM – 12 AM:<br>
-				1 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session V<br>
-				Lunch<br>
-				Committee Session VI<br>
-				Afternoon Break<br>
-				Committee Session VII<br>
-				Dinner<br>
-				Delegate Dance<br>
-				Movie Showing<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Sunday, November 23, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:30 AM - 12 PM:<br>
-				12 - 1:30 PM:<br>
-				1:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session VIII<br>
-				Closing Ceremonies<br>
-				Lunch
-			</div>
-		</div>
-	</div>
-	</div>
+		<?php
+		if ($_SESSION['user']['user_type'] == 3) {
+			echo "<style>
+			.container-footer {
+				position: absolute;
+				bottom: 0px;
+			}
+			</style>";
+		}
+		?>
 		<div class="container container-footer">
 			<div class="container">
 				<footer>

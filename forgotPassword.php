@@ -1,6 +1,40 @@
+<?php
+session_start();
+$errors=array();
+$success=array();
+$dbLink = mysql_connect('localhost', 'pmunc', 'pmunctechteam');
+if(!$dbLink)
+die('Database connection not established.' . mysql_error());
+$dbSelected = mysql_select_db('pmunc', $dbLink);
+
+if (isset($_POST['forgotPasswordSubmit']) && $_POST['forgotPasswordSubmit'] == 'true') {
+	$email = trim($_POST['email']);
+	$query = 'SELECT * FROM users WHERE email = "' . mysql_real_escape_string($email) . '" LIMIT 1';
+	if (mysql_query($query)) {
+		$newPassword = substr(md5(rand()), 0, 10);
+		$query = 'UPDATE users SET password=MD5("' . $newPassword . '") WHERE email="'. mysql_real_escape_string($email) . '";';
+		if (mysql_query($query)) {
+			$success['generateNewPassword'] = "Your new password has been sent to you.";
+			$message = "Hello,<br><br>
+			Your new PMUNC password is: " . $newPassword . "<br>
+			Please log in and reset your password.<br><br>
+			Regards,<br>
+			Your PMUNC Webmasters";
+			mail($email,"Your PMUNC Account", $message);
+			mail("ac17@princeton.edu","Testing", "Is this working?");
+			mail("angelica.chen5@gmail.com", "Testing", "Is this working?");
+		}
+	}
+	else {
+		$errors['generateNewPassword'] = "This email address is not in our system.";
+	}
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<meta charset="utf-8">
 		<!-- PACE LOADING BAR DEPENDENCIES -->
 		<script src="js/pace.min.js"></script>
 		<link href="css/pace-minimal.css" rel="stylesheet">
@@ -20,7 +54,7 @@
 
 		<!-- CUSTOM CSS -->
 		<link href="css/index.css" rel="stylesheet">
-		<link href="css/schedule.css" rel="stylesheet">
+		<link href="css/signin.css" rel="stylesheet">
 
 		<title>PMUNC</title>
 		<meta charset="utf-8">
@@ -58,7 +92,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="index.html">Home</a></li>
 						<li><a href="register.html">Register</a></li>
-						<li class="dropdown active">
+						<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Information <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="logistics.html">Logistics</a></li>
@@ -67,7 +101,7 @@
 							<li><a href="faq.html">FAQ</a></li>
 						</ul>
 						</li>
-						<li><a href="committees.php">Committees</a></li>
+						<li><a href="committees.html">Committees</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="https://www.facebook.com/PrincetonInternationalRelationsCouncil"><i class="fa fa-facebook"></i></a></li>
@@ -77,98 +111,20 @@
 				</div>
 			</div>
 		</div>
-		<!-- JUMBOTRON -->
-		<div class="jumbotron schedule">
+		<div class="container" id="signin-container">
 			<div class="container">
-				<h1 class="banner-inverted"><font color="white">Schedule</font></h1>
+				<h1 class="text-center">Forgot your password?</h1>
+				<center>No worries! Enter your email below and we'll send you a new password.</center>
+				<form name="forgotPasswordForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-signin" role="form">
+					<?php if ($success['generateNewPassword']) print "<div class=\"valid\">" . $success['generateNewPassword'] . "</div>";
+					if ($errors['generateNewPassword']) print "<div class=\"valid\">" . $errors['generateNewPassword'] . "</div>";
+					?>
+					<input type="email" class="form-control" placeholder="mail@mail.com" value="" name="email" required autofocus><br>
+					<input type="hidden" name="forgotPasswordSubmit" id="forgotPasswordSubmit" value="true">
+					<input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit"></button>
+				</form>
 			</div>
 		</div>
-		<div class="container" id="sched-container">
-			<div class="container">
-		<h1 class="text-center">Thursday, November 20, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				5 - 6 PM:<br>
-				6 - 8 PM:<br>
-				8 - 11 PM:<br>
-				11:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Opening Ceremonies<br>
-				Dinner<br>
-				Committee Session I<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Friday, November 21, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:00 AM – 1:30 PM:<br>
-				1:30 – 4 PM:<br>
-				3:30 – 4:30 PM:<br>
-				4 – 6:30 PM:<br>
-				6 – 8 PM:<br>
-				7:30 PM – 11:30 PM:<br>
-				12 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Optional Campus Visits<br>
-				Committee Session II<br>
-				Afternoon Break<br>
-				Committee Session III<br>
-				Dinner<br>
-				Committee Session IV<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Saturday, November 22, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				8:30 AM – 12 PM:<br>
-				11:30 AM – 1:30 PM:<br>
-				1 – 4:30 PM:<br>
-				4 – 5 PM:<br>
-				4:30 – 7:30 PM:<br>
-				7 – 9 PM:<br>
-				9:30 PM – 12 AM:<br>
-				10 PM – 12 AM:<br>
-				1 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session V<br>
-				Lunch<br>
-				Committee Session VI<br>
-				Afternoon Break<br>
-				Committee Session VII<br>
-				Dinner<br>
-				Delegate Dance<br>
-				Movie Showing<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Sunday, November 23, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:30 AM - 12 PM:<br>
-				12 - 1:30 PM:<br>
-				1:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session VIII<br>
-				Closing Ceremonies<br>
-				Lunch
-			</div>
-		</div>
-	</div>
-	</div>
 		<div class="container container-footer">
 			<div class="container">
 				<footer>
@@ -177,8 +133,6 @@
 				</footer>
 			</div>
 		</div>
-
-
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	</body>

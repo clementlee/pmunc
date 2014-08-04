@@ -1,3 +1,35 @@
+<?php
+include_once('config3.php');
+$errors=array();
+$success=array();
+
+if (isset($_POST['editSubmit']) && $_POST['editSubmit'] == 'true') {
+	$oldEmail = $_SESSION['user']['email'];
+	$newEmail = trim($_POST['email']);
+	$newPassword = trim($_POST['password']);
+	$newConfirmPassword = trim($_POST['confirmPassword']);
+
+	if (!eregi("^[^@]{1,64}@[^@]{1,255}$", $newEmail))
+		$errors['newEmail'] = 'Your email address is invalid.';
+
+	if(strlen($newPassword) < 6 || strlen($newPassword) > 12)
+		$errors['newPassword'] = 'Your password must be between 6-12 characters.';
+
+	if($newPassword != $newConfirmPassword)
+		$errors['newConfirmPassword'] = 'Your passwords did not match.';
+
+	$query1 = 'UPDATE users SET email="' . $newEmail . '", password=MD5("' . $newPassword . '") WHERE session_id="'. session_id() . '";';
+	$query2 = 'UPDATE COMMITTEE_INFO set Email="' . $newEmail . '" WHERE Email="' . $oldEmail . '";';
+	if (!$errors) {
+		if (mysql_query($query1) && mysql_query($query2)) {
+			$success['editAccountInfo'] = 'Your information has been updated.';
+		}
+		else {
+			$error['editAccountInfo'] = 'There was a problem updating your information. Please try again.';
+		}
+	}
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -20,7 +52,7 @@
 
 		<!-- CUSTOM CSS -->
 		<link href="css/index.css" rel="stylesheet">
-		<link href="css/schedule.css" rel="stylesheet">
+		<link href="css/Template.css" rel="stylesheet">
 
 		<title>PMUNC</title>
 		<meta charset="utf-8">
@@ -58,7 +90,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="index.html">Home</a></li>
 						<li><a href="register.html">Register</a></li>
-						<li class="dropdown active">
+						<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Information <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="logistics.html">Logistics</a></li>
@@ -77,98 +109,34 @@
 				</div>
 			</div>
 		</div>
-		<!-- JUMBOTRON -->
-		<div class="jumbotron schedule">
+		<div class="container" id="template-container">
 			<div class="container">
-				<h1 class="banner-inverted"><font color="white">Schedule</font></h1>
+				<h1 class="text-center">Your Account Information</h1>
+				<div class="horbar">
+				</div><br>
+				<h3>Email: <?php echo $_SESSION['user']['email']; ?></h3>
+				<h3>Password: <i>(Not displayed for security reasons.)</i></h3><br>
+				<h1 class="text-center">Edit Info</h1>
+				<div class="horbar"></div><br>
+				<form name="editForm" role="form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+					<?php
+					if ($success['editAccountInfo'])
+						print "<div class=\"valid\">" . $success['editAccountInfo'] . "</div>";
+					if ($errors['editAccountInfo'])
+						print "<div class=\"invalid\">" . $errors['editAccountInfo'] . "</div>";
+					?>
+					New email <input type="email" name="email" class="form-control" value="<?php echo $_SESSION['user']['email']; ?>" required><br>
+					<?php if ($errors['newEmail']) print "<div class=\"invalid\">" . $errors['newEmail'] . "</div>"; ?>
+					New password <input type="password" name="password" value="" class="form-control" placeholder="Password" required><br>
+					<?php if ($errors['newPassword']) print "<div class=\"invalid\">" . $errors['newPassword'] . "</div>"; ?>
+					Confirm new password <input type="password" name="confirmPassword" value="" class="form-control" placeholder="Password" required><br>
+					<?php if ($errors['newConfirmPassword']) print "<div class=\"invalid\">" . $errors['newConfirmPassword'] . "</div>"; ?>
+					<input type="hidden" name="editSubmit" id="editSubmit" value="true">
+					<input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit">
+				</form><br>
+				<center><a href="dashboard.php"><button type="button" class="btn btn-link">Back to Dashboard</button></a></center>
 			</div>
 		</div>
-		<div class="container" id="sched-container">
-			<div class="container">
-		<h1 class="text-center">Thursday, November 20, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				5 - 6 PM:<br>
-				6 - 8 PM:<br>
-				8 - 11 PM:<br>
-				11:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Opening Ceremonies<br>
-				Dinner<br>
-				Committee Session I<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Friday, November 21, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:00 AM – 1:30 PM:<br>
-				1:30 – 4 PM:<br>
-				3:30 – 4:30 PM:<br>
-				4 – 6:30 PM:<br>
-				6 – 8 PM:<br>
-				7:30 PM – 11:30 PM:<br>
-				12 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Optional Campus Visits<br>
-				Committee Session II<br>
-				Afternoon Break<br>
-				Committee Session III<br>
-				Dinner<br>
-				Committee Session IV<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Saturday, November 22, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				8:30 AM – 12 PM:<br>
-				11:30 AM – 1:30 PM:<br>
-				1 – 4:30 PM:<br>
-				4 – 5 PM:<br>
-				4:30 – 7:30 PM:<br>
-				7 – 9 PM:<br>
-				9:30 PM – 12 AM:<br>
-				10 PM – 12 AM:<br>
-				1 AM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session V<br>
-				Lunch<br>
-				Committee Session VI<br>
-				Afternoon Break<br>
-				Committee Session VII<br>
-				Dinner<br>
-				Delegate Dance<br>
-				Movie Showing<br>
-				Curfew
-			</div>
-		</div><br>
-		<h1 class="text-center">Sunday, November 23, 2014</h1>
-		<div class="horbar">
-		</div><br>
-		<div class="row">
-			<div class="col-sm-6 text-right bold-text">
-				9:30 AM - 12 PM:<br>
-				12 - 1:30 PM:<br>
-				1:30 PM:
-			</div>
-			<div class="col-sm-6 text-left">
-				Committee Session VIII<br>
-				Closing Ceremonies<br>
-				Lunch
-			</div>
-		</div>
-	</div>
-	</div>
 		<div class="container container-footer">
 			<div class="container">
 				<footer>
@@ -177,8 +145,6 @@
 				</footer>
 			</div>
 		</div>
-
-
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	</body>
